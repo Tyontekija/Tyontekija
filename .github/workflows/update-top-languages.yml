@@ -1,0 +1,26 @@
+name: Update Top Languages SVG
+
+on:
+  schedule:
+    - cron: '0 * * * *' # runs daily at midnight UTC
+  workflow_dispatch:     # manual trigger
+
+jobs:
+  update-streak:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download Top Languages SVG
+        run: |
+          mkdir -p assets
+          curl "https://github-readme-stats.vercel.app/api/top-langs/?username=test&layout=compact&hide_border=true&bg_color=151515&title_color=FFA726&text_color=FEFEFE&card_width=300&border_radius=5" -o assets/top-languages.svg
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/top-languages.svg
+          git commit -m "Update Top Languages SVG [ci skip]" || echo "No changes to commit"
+          git push
